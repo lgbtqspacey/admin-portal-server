@@ -6,12 +6,6 @@ import { getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
 
 export default class ReportsController {
-    /**
-     * Creates a new report.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `InternalServerError` If the report is not created.
-     */
     public static readonly createReport = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const report = getDataFromPreviousMiddleware(reqData.reportCreate, req, next)
@@ -33,12 +27,6 @@ export default class ReportsController {
         }
     }
 
-    /**
-     * Gets all reports from a user.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `InternalServerError` If the reports cannot be retrieved.
-     */
     public static readonly getReportsByUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filterReports, req, next)
@@ -69,12 +57,6 @@ export default class ReportsController {
         }
     }
 
-    /**
-     * Updates a single existing report.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` If the report is not found.
-     */
     public static readonly updateReport = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
@@ -97,12 +79,6 @@ export default class ReportsController {
         }
     }
 
-    /**
-     * Deletes a single report.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` If the report is not found.
-     */
     public static readonly deleteReport = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)

@@ -2,19 +2,12 @@ import { NextFunction, Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
 import { reportCreate, reportUpdate, roleCreate, roleUpdate, userCreate, userUpdate } from '../schema/document'
 import { filterReport, filterUser, id, login } from '../schema/filter'
-import { reqData } from '../tools/Constants'
+import { errorMessages, headers, reqData } from '../tools/Constants'
 import { BadRequest } from '../tools/Error'
 import Password from '../tools/Password'
 import { Filter, FilterReport, Login, Report, Role, User } from '../types/Schemas'
 
 export default class ValidateRequest {
-    /**
-     * Validates query params and builds the database query filter from them.
-     * 
-     * Sends the filter to the next middleware in `req.res.locals.filter`.
-     * 
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly filter = (req: Request, res: Response, next: NextFunction) => {
         try {
             const { error, value } = filterUser.validate(req.query)
@@ -49,12 +42,6 @@ export default class ValidateRequest {
         }
     }
 
-    /**
-     * Validates the filter for user reports then sends it to 
-     * the next middleware in `req.res.locals.filterReports`.
-     * 
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly filterReports = (req: Request, res: Response, next: NextFunction) => {
         try {
             const { error, value } = filterReport.validate(req.query)
@@ -85,13 +72,6 @@ export default class ValidateRequest {
         }
     }
 
-    /**
-     * Validates the id from path params and builds the database query filter from it.
-     * 
-     * Sends the filter to the next middleware in `req.res.locals.filter`.
-     * 
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly id = (req: Request, res: Response, next: NextFunction) => {
         try {
             const { error, value } = id.validate(req.params.id)
@@ -101,7 +81,11 @@ export default class ValidateRequest {
                 next(new BadRequest(message))
                 next()
             } else {
-                res.locals[reqData.filter] = { _id: value }
+                if (req.url.includes('/auth/logout/')) {
+                    res.locals[reqData.filter] = { user_id: value }
+                } else {
+                    res.locals[reqData.filter] = { _id: value }
+                }
                 next()
             }
         } catch (error) {
@@ -109,18 +93,6 @@ export default class ValidateRequest {
         }
     }
 
-    /**
-     * Validates the request for report creation and update.
-     * 
-     * If the request is a POST, validates the body, creates id, timestamp and then
-     * sends the report to the next middleware in `req.res.locals.reportCreate`.
-     * 
-     * If the request is a PUT, validates the body, removes id from the update data,
-     * creates timestamp and then sends the report to the next middleware 
-     * in `req.res.locals.reportUpdate`.
-     *      
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly report = (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.method === 'POST') {
@@ -163,18 +135,6 @@ export default class ValidateRequest {
         }
     }
 
-    /**
-     * Validates the request for role creation and update.
-     * 
-     * If the request is a POST, validates the body, creates id, timestamp and then
-     * sends the role to the next middleware in `req.res.locals.roleCreate`.
-     * 
-     * If the request is a PUT, validates the body, removes id from the update data,
-     * creates timestamp and then sends the role to the next middleware 
-     * in `req.res.locals.roleUpdate`.     
-     *
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly role = (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.method === 'POST') {
@@ -217,18 +177,6 @@ export default class ValidateRequest {
         }
     }
 
-    /**
-     * Validates the request for user creation and update.
-     * 
-     * If the request is a POST, validates the body, creates id, timestamp and then
-     * sends the user to the next middleware in `req.res.locals.userCreate`.
-     * 
-     * If the request is a PATCH, validates the body, removes id from the update data,
-     * creates timestamp and then sends the user to the next middleware
-     * in `req.res.locals.userUpdate`.
-     * 
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly user = (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.method === 'POST') {
@@ -272,16 +220,6 @@ export default class ValidateRequest {
         }
     }
 
-    /**
-     * Validates the request for login. It accepts either `email` or `username`.
-     * The `password` is always required.
-     * 
-     * The `email` or `username` are sent to the next middleware in `req.res.locals.filter`.
-     *
-     * The Hash of the `password` is sent to the next middleware in `req.res.locals.password`.
-     * 
-     * @throws `BadRequest` If the validation fails
-     */
     public static readonly login = (req: Request, res: Response, next: NextFunction) => {
         try {
             const { error, value } = login.validate(req.body)
@@ -302,6 +240,22 @@ export default class ValidateRequest {
 
                 res.locals[reqData.filter] = { $and: filter }
                 res.locals[reqData.password] = password
+                next()
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    public static readonly logout = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = req.header(headers.sessionToken)
+
+            if (!token) {
+                next(new BadRequest(errorMessages.authNotProvided))
+                next()
+            } else {
+                res.locals[reqData.token] = token
                 next()
             }
         } catch (error) {

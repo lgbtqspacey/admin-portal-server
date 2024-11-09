@@ -1,18 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import { collections } from '../server'
-import { errorMessages, httpStatus, reqData } from '../tools/Constants'
-import { BadRequest, NotFound } from '../tools/Error'
+import { errorMessages, headers, httpStatus, reqData } from '../tools/Constants'
+import { BadRequest, InternalServerError, NotFound } from '../tools/Error'
 import { generateSession, getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
 
 export default class AuthController {
-    /**
-     * Checks if user exists and if password is correct. If both are true, it returns a JWT token.
-     * 
-     * @throws `BadRequest` If the credentials are invalid
-     * @throws `NotFound` If the user is not found
-     */
-    public static readonly userLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public static readonly login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
             const password = getDataFromPreviousMiddleware(reqData.password, req, next)
@@ -27,15 +21,62 @@ export default class AuthController {
                 next()
             } else {
                 const session = generateSession(user._id.toString())
-                await collections.auth.sessions.deleteMany({ user_id: user._id })
                 await collections.auth.sessions.insertOne(session as object)
 
-                res.status(httpStatus.ok).send({ token: session.token, expiresAt: session.expires_at })
+                res.header(headers.sessionToken, session.token)
+                res.header(headers.sessionExpiresAt, session.expires_at)
+                res.status(httpStatus.ok).send()
             }
             Log.info('controller', 'UserController :: Calling Endpoint :: Login')
         } catch (error) {
             res.locals[reqData.logTag] = 'controller'
             res.locals[reqData.logTrigger] = 'UserController :: Calling Endpoint :: Login'
+            next(error)
+        }
+    }
+
+    public static readonly logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const session = getDataFromPreviousMiddleware(reqData.token, req, next)
+
+            const result = await collections.auth.sessions.deleteOne({ token: session })
+
+            if (result.deletedCount === 0) {
+                next(new NotFound())
+                next()
+            } else if (result.deletedCount > 0) {
+                res.status(httpStatus.ok).send()
+            } else {
+                next(new InternalServerError())
+                next()
+            }
+            Log.info('controller', 'UserController :: Calling Endpoint :: Logout')
+        } catch (error) {
+            res.locals[reqData.logTag] = 'controller'
+            res.locals[reqData.logTrigger] = 'UserController :: Calling Endpoint :: Logout'
+            next(error)
+        }
+    }
+
+    public static readonly logoutAllDevices = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
+
+            const result = await collections.auth.sessions.deleteMany(filter)
+
+            if (result.deletedCount === 0) {
+                next(new NotFound())
+                next()
+            } else if (result.deletedCount > 1) {
+                res.status(httpStatus.ok).send()
+            } else {
+                next(new InternalServerError())
+                next()
+            }
+            Log.info('controller', 'UserController :: Calling Endpoint :: LogoutAllDevices')
+        } catch (error) {
+            res.locals[reqData.logTag] = 'controller'
+            res.locals[reqData.logTrigger] = 'UserController :: Calling Endpoint :: LogoutAllDevices'
             next(error)
         }
     }

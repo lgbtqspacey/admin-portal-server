@@ -13,6 +13,7 @@ export const reqData = {
     projection: 'projection',
     page: 'page',
     limit: 'limit',
+    token: 'token',
 }
 
 export const errorMessages = {
@@ -47,4 +48,9 @@ export const httpStatus = {
     badGateway: 502,
     serviceUnavailable: 503,
     connectionTimedOut: 522,
+}
+
+export const headers = {
+    sessionToken: 'session-token',
+    sessionExpiresAt: 'session-expires-at',
 }

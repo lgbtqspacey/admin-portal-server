@@ -50,6 +50,7 @@ const connect = async () => {
 }
 
 const peopleDB = client.db('people')
+const authDB = client.db('auth')
 
 /**
  * Declare databases and collections used in the application.
@@ -64,7 +65,7 @@ const collections = {
         reports: peopleDB.collection('reports'),
     },
     auth: {
-        sessions: peopleDB.collection('refresh_tokens'),
+        sessions: authDB.collection('sessions'),
     }
 }
 

@@ -1,23 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { collections } from '../server'
-import { errorMessages } from '../tools/Constants'
+import { errorMessages, headers } from '../tools/Constants'
 import { BadRequest, Unauthorized } from '../tools/Error'
-import { refreshSession } from 'src/tools/Helpers'
+import { refreshSession } from '../tools/Helpers'
 
 export default class Auth {
-    /**
-     * Verifies if the user is logged in.
-     * 
-     * Refreshes the session if it is not expired
-     * 
-     * @throws `Unauthorized` If the user is not logged
-     * @throws `BadRequest` If the token is not provided
-     */
     public static readonly session = async (req: Request, _res: Response, next: NextFunction) => {
         try {
-            const token = req.header('session')
+            const token = req.header(headers.sessionToken)
 
-            if (token) {
+            if (!token) {
                 next(new BadRequest(errorMessages.authNotProvided))
                 next()
             } else {

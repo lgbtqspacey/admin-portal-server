@@ -6,12 +6,6 @@ import { getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
 
 export default class AdminController {
-    /**
-     * Creates a new user.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `InternalServerError` if user creation fails.
-     */
     public static readonly createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const user = getDataFromPreviousMiddleware(reqData.userCreate, req, next)
@@ -33,12 +27,6 @@ export default class AdminController {
         }
     }
 
-    /**
-     * Retrieves an user.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` if user is not found.
-     */
     public static readonly getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
@@ -70,12 +58,6 @@ export default class AdminController {
         }
     }
 
-    /**
-     * Updates an user.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` if user is not found.
-     */
     public static readonly updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
@@ -98,12 +80,6 @@ export default class AdminController {
         }
     }
 
-    /**
-     * Deletes an user.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` if user is not found.
-     */
     public static readonly deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)

@@ -6,12 +6,6 @@ import { getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
 
 export default class RolesController {
-    /**
-     * Creates a new role.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `InternalServerError` If the role could not be created.
-     */
     public static readonly createRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const role = getDataFromPreviousMiddleware(reqData.roleCreate, req, next)
@@ -33,12 +27,6 @@ export default class RolesController {
         }
     }
 
-    /**
-     * Returns all roles.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `InternalServerError` If the roles could not be found.
-     */
     public static readonly getRoles = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const page = getDataFromPreviousMiddleware(reqData.page, _req, next)
@@ -68,13 +56,6 @@ export default class RolesController {
         }
     }
 
-
-    /**
-     * Updates an existing role.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` If the role could not be found.
-     */
     public static readonly updateRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
@@ -97,12 +78,6 @@ export default class RolesController {
         }
     }
 
-    /**
-     * Deletes an existing role.
-     * 
-     * @see `ValidateRequest.ts` for validation rules.
-     * @throws `NotFound` If the role could not be found.
-     */
     public static readonly deleteRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)

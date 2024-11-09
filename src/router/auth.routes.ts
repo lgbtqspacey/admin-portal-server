@@ -8,7 +8,7 @@ const authRouter = express.Router()
  * Auth routes
  */
 authRouter.post(
-    '/api/auth/login',
+    '/api/v1/auth/login',
     ValidateRequest.login,
     AuthController.userLogin,
     authRouter

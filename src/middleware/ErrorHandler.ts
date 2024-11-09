@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { JsonWebTokenError } from 'jsonwebtoken'
 import { MongoServerError } from 'mongodb'
 import { errorMessages, httpStatus, mongoDBErrors, reqData } from '../tools/Constants'
 import { BaseError } from '../tools/Error'
@@ -17,7 +16,6 @@ export default class ErrorHandler {
         switch (true) {
             case err instanceof BaseError: return this._baseError(err, res, tag, trigger)
             case err instanceof MongoServerError: return this._mongoDbError(err, res, tag, trigger)
-            case err instanceof JsonWebTokenError: return this._unauthorizedError(err, res, tag, trigger)
             case err instanceof SyntaxError: return this._syntaxError(err, res, tag, trigger)
             default: {
                 Log.error('error_handler', `${err.message}`, err)
@@ -40,16 +38,6 @@ export default class ErrorHandler {
             Log.error(tag, `${trigger} => ${err.message}`, err)
             return res.status(err.status).json({ message: errorMessages.generic })
         }
-    }
-
-    /**
-   * Handles authorization errors
-   * @returns Response with unauthorized error code and its message
-   * @see JsonWebToken {@link https://www.npmjs.com/package/jsonwebtoken}
-   */
-    private static readonly _unauthorizedError = (err: Error, res: Response, tag: Tag, trigger: string) => {
-        Log.error(tag, `${trigger} => ${err.message}`, err)
-        return res.status(httpStatus.unauthorized).json({ error: err.message })
     }
 
     /**

@@ -75,3 +75,12 @@ export type ReportDetails = {
     relation: string
     report: string
 }
+
+export type Session = {
+    _id?: string
+    user_id?: string
+    token?: string
+    created_at?: string
+    expires_at?: string
+    updated_at?: string
+}

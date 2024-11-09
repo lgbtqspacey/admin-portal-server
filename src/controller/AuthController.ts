@@ -2,8 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { collections } from '../server'
 import { errorMessages, httpStatus, reqData } from '../tools/Constants'
 import { BadRequest, NotFound } from '../tools/Error'
-import { getDataFromPreviousMiddleware } from '../tools/Helpers'
-import JWT from '../tools/JWT'
+import { generateSession, getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
 
 export default class AuthController {
@@ -27,8 +26,11 @@ export default class AuthController {
                 next(new BadRequest(errorMessages.loginFailed))
                 next()
             } else {
-                const token = JWT.generate(user._id.toString())
-                res.status(httpStatus.ok).send({ token: token })
+                const session = generateSession(user._id.toString())
+                await collections.auth.sessions.deleteMany({ user_id: user._id })
+                await collections.auth.sessions.insertOne(session as object)
+
+                res.status(httpStatus.ok).send({ token: session.token, expiresAt: session.expires_at })
             }
             Log.info('controller', 'UserController :: Calling Endpoint :: Login')
         } catch (error) {

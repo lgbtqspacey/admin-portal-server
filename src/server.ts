@@ -1,11 +1,9 @@
 import * as dotenv from 'dotenv'
 import express, { Application } from 'express'
 import { MongoClient, ServerApiVersion } from 'mongodb'
-import passport from 'passport'
 import ErrorHandler from './middleware/ErrorHandler'
 import { routes } from './router/routes'
 import Log from './tools/Log'
-import configurePassport from './tools/Passport'
 
 dotenv.config({ path: '.env' })
 
@@ -27,9 +25,6 @@ const client = new MongoClient(process.env.DB_URI as string, {
  */
 const start = () => {
     try {
-        configurePassport(passport)
-
-        app.use(passport.initialize())
         app.use(ErrorHandler.httpErrorHandler)
 
         app.listen(PORT, () => {
@@ -68,6 +63,9 @@ const collections = {
         roles: peopleDB.collection('roles'),
         reports: peopleDB.collection('reports'),
     },
+    auth: {
+        sessions: peopleDB.collection('refresh_tokens'),
+    }
 }
 
 export { collections }

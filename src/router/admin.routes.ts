@@ -10,32 +10,32 @@ const adminRouter = express.Router()
  * User management routes
  */
 adminRouter.post(
-    '/api/admin/users',
-    Auth.jwt,
+    '/api/v1/admin/users',
+    Auth.session,
     ValidateRequest.user,
     AdminController.createUser,
     adminRouter
 )
 
 adminRouter.get(
-    '/api/admin/users',
-    Auth.jwt,
+    '/api/v1/admin/users',
+    Auth.session,
     ValidateRequest.filter,
     AdminController.getUser,
     adminRouter
 )
 
 adminRouter.patch(
-    '/api/admin/users/:id',
-    Auth.jwt,
+    '/api/v1/admin/users/:id',
+    Auth.session,
     ValidateRequest.user,
     AdminController.updateUser,
     adminRouter
 )
 
 adminRouter.delete(
-    '/api/admin/users/:id',
-    Auth.jwt,
+    '/api/v1/admin/users/:id',
+    Auth.session,
     ValidateRequest.id,
     AdminController.deleteUser,
     adminRouter
@@ -45,32 +45,32 @@ adminRouter.delete(
  * Role management routes
  */
 adminRouter.post(
-    '/api/admin/roles',
-    Auth.jwt,
+    '/api/v1/admin/roles',
+    Auth.session,
     ValidateRequest.role,
     RolesController.createRole,
     adminRouter
 )
 
 adminRouter.get(
-    '/api/admin/roles',
-    Auth.jwt,
+    '/api/v1/admin/roles',
+    Auth.session,
     ValidateRequest.filter,
     RolesController.getRoles,
     adminRouter
 )
 
 adminRouter.put(
-    '/api/admin/roles/:id',
-    Auth.jwt,
+    '/api/v1/admin/roles/:id',
+    Auth.session,
     ValidateRequest.role,
     RolesController.updateRole,
     adminRouter
 )
 
 adminRouter.delete(
-    '/api/admin/roles/:id',
-    Auth.jwt,
+    '/api/v1/admin/roles/:id',
+    Auth.session,
     ValidateRequest.id,
     RolesController.deleteRole,
     adminRouter
@@ -80,32 +80,32 @@ adminRouter.delete(
  * Reports management routes
  */
 adminRouter.post(
-    '/api/admin/reports',
-    Auth.jwt,
+    '/api/v1/admin/reports',
+    Auth.session,
     ValidateRequest.report,
     ReportsController.createReport,
     adminRouter
 )
 
 adminRouter.get(
-    '/api/admin/reports',
-    Auth.jwt,
+    '/api/v1/admin/reports',
+    Auth.session,
     ValidateRequest.filterReports,
     ReportsController.getReportsByUser,
     adminRouter
 )
 
 adminRouter.put(
-    '/api/admin/reports/:id',
-    Auth.jwt,
+    '/api/v1/admin/reports/:id',
+    Auth.session,
     ValidateRequest.report,
     ReportsController.updateReport,
     adminRouter
 )
 
 adminRouter.delete(
-    '/api/admin/reports/:id',
-    Auth.jwt,
+    '/api/v1/admin/reports/:id',
+    Auth.session,
     ValidateRequest.id,
     ReportsController.deleteReport,
     adminRouter

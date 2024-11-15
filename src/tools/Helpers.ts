@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import { NextFunction, Request } from 'express'
 import { v4 as uuid } from 'uuid'
 import { InternalServerError } from '../tools/Error'
-import { Session } from '../types/Schemas'
+import { ConfirmationData, Session } from '../types/Schemas'
 
 /**
  * Returns the data from the previous middleware
@@ -21,17 +21,27 @@ export const getDataFromPreviousMiddleware = (key: string, req: Request, next: N
 
 
 /**
- * Generates a refresh token with 30 days of expiration
- * @param userId
- * @returns the data to insert the session
+ * Generates a user session
  */
-export const generateSession = (userId: string): Session => {
+export const createSession = (userId: string): Session => {
     return {
-        _id: uuid(),
         user_id: userId,
         token: crypto.randomBytes(32).toString('hex'),
-        created_at: new Date().toISOString(),
         expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    }
+}
+
+/**
+ * Add additional data to the session to save on the server
+ */
+export const confirmSession = (confirmation: ConfirmationData): Session => {
+    return {
+        _id: uuid(),
+        created_at: new Date().toISOString(),
+        user_id: confirmation.user_id,
+        token: confirmation.token,
+        expires_at: confirmation.expires_at,
+        device_info: confirmation.device_info
     }
 }
 

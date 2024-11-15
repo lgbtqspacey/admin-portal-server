@@ -5,7 +5,7 @@ import { filterReport, filterUser, id, login } from '../schema/filter'
 import { errorMessages, headers, reqData } from '../tools/Constants'
 import { BadRequest } from '../tools/Error'
 import Password from '../tools/Password'
-import { Filter, FilterReport, Login, Report, Role, User } from '../types/Schemas'
+import { ConfirmationData, Filter, FilterReport, Login, Report, Role, User } from '../types/Schemas'
 
 export default class ValidateRequest {
     public static readonly filter = (req: Request, res: Response, next: NextFunction) => {
@@ -256,6 +256,33 @@ export default class ValidateRequest {
                 next()
             } else {
                 res.locals[reqData.token] = token
+                next()
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    public static readonly loginConfirmation = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = req.header(headers.sessionToken)
+            const userId = req.header(headers.sessionUserId)
+            const expiresAt = req.header(headers.sessionExpiresAt)
+            const deviceOS = req.header(headers.sessionDeviceOS)
+            const deviceIp = req.header(headers.sessionDeviceIp)
+            const deviceLocation = req.header(headers.sessionDeviceLocation)
+
+            if (!token || !userId || !deviceOS || !deviceIp || !deviceLocation || !expiresAt) {
+                next(new BadRequest(errorMessages.authNotProvided))
+                next()
+            } else {
+                const confirmationData: ConfirmationData = {
+                    user_id: userId,
+                    token: token,
+                    expires_at: expiresAt,
+                    device_info: { os: deviceOS, ip: deviceIp, location: deviceLocation }
+                }
+                res.locals[reqData.confirmationData] = confirmationData
                 next()
             }
         } catch (error) {

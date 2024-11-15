@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { collections } from '../server'
 import { errorMessages, headers, httpStatus, reqData } from '../tools/Constants'
 import { BadRequest, InternalServerError, NotFound } from '../tools/Error'
-import { generateSession, getDataFromPreviousMiddleware } from '../tools/Helpers'
+import { confirmSession, createSession, getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
 
 export default class AuthController {
@@ -20,11 +20,11 @@ export default class AuthController {
                 next(new BadRequest(errorMessages.loginFailed))
                 next()
             } else {
-                const session = generateSession(user._id.toString())
-                await collections.auth.sessions.insertOne(session as object)
+                const session = createSession(user._id.toString())
 
                 res.header(headers.sessionToken, session.token)
                 res.header(headers.sessionExpiresAt, session.expires_at)
+                res.header(headers.sessionUserId, session.user_id)
                 res.status(httpStatus.ok).send()
             }
             Log.info('controller', 'UserController :: Calling Endpoint :: Login')
@@ -77,6 +77,27 @@ export default class AuthController {
         } catch (error) {
             res.locals[reqData.logTag] = 'controller'
             res.locals[reqData.logTrigger] = 'UserController :: Calling Endpoint :: LogoutAllDevices'
+            next(error)
+        }
+    }
+
+    public static readonly loginConfirmation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const confirmationData = getDataFromPreviousMiddleware(reqData.confirmationData, req, next)
+            const session = confirmSession(confirmationData)
+
+            const result = await collections.auth.sessions.insertOne(session as object)
+
+            if (result.insertedId) {
+                res.status(httpStatus.ok).send()
+            } else {
+                next(new InternalServerError())
+                next()
+            }
+            Log.info('controller', 'UserController :: Calling Endpoint :: LoginConfirmation')
+        } catch (error) {
+            res.locals[reqData.logTag] = 'controller'
+            res.locals[reqData.logTrigger] = 'UserController :: Calling Endpoint :: LoginConfirmation'
             next(error)
         }
     }

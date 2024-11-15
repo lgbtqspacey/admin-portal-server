@@ -16,9 +16,16 @@ authRouter.post(
 )
 
 authRouter.post(
+    '/api/v1/auth/login/confirmation',
+    ValidateRequest.loginConfirmation,
+    AuthController.loginConfirmation,
+    authRouter
+)
+
+authRouter.post(
     '/api/v1/auth/logout',
     Auth.session,
-    ValidateRequest.logout,
+    ValidateRequest.login,
     AuthController.logout,
     authRouter
 )

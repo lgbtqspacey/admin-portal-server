@@ -83,4 +83,18 @@ export type Session = {
     created_at?: string
     expires_at?: string
     updated_at?: string
+    device_info?: DeviceInfo
+}
+
+export type ConfirmationData = {
+    user_id: string
+    token: string
+    expires_at: string,
+    device_info: DeviceInfo
+}
+
+export type DeviceInfo = {
+    os: string
+    ip: string
+    location: string
 }

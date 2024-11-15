@@ -14,6 +14,7 @@ export const reqData = {
     page: 'page',
     limit: 'limit',
     token: 'token',
+    confirmationData: 'confirmationData',
 }
 
 export const errorMessages = {
@@ -53,4 +54,8 @@ export const httpStatus = {
 export const headers = {
     sessionToken: 'session-token',
     sessionExpiresAt: 'session-expires-at',
+    sessionUserId: 'session-user-id',
+    sessionDeviceOS: 'session-device-os',
+    sessionDeviceIp: 'session-device-ip',
+    sessionDeviceLocation: 'session-device-location',
 }

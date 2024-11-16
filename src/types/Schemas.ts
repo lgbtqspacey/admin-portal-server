@@ -96,5 +96,9 @@ export type ConfirmationData = {
 export type DeviceInfo = {
     os: string
     ip: string
-    location: string
+    location: {
+        city: string
+        region: string
+        country: string
+    }
 }

@@ -23,7 +23,7 @@ export default class AuthController {
                 const session = createSession(user._id.toString())
 
                 res.header(headers.sessionToken, session.token)
-                res.header(headers.sessionExpiresAt, session.expires_at)
+                res.header(headers.sessionExpiration, session.expires_at)
                 res.header(headers.sessionUserId, session.user_id)
                 res.status(httpStatus.ok).send()
             }

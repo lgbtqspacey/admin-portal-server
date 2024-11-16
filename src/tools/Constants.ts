@@ -52,10 +52,8 @@ export const httpStatus = {
 }
 
 export const headers = {
-    sessionToken: 'session-token',
-    sessionExpiresAt: 'session-expires-at',
-    sessionUserId: 'session-user-id',
-    sessionDeviceOS: 'session-device-os',
-    sessionDeviceIp: 'session-device-ip',
-    sessionDeviceLocation: 'session-device-location',
+    sessionToken: 'sessionToken',
+    sessionExpiration: 'sessionExpiration',
+    sessionUserId: 'sessionUserId',
+    sessionDeviceOS: 'sessionDeviceOS'
 }

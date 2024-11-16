@@ -263,14 +263,20 @@ export default class ValidateRequest {
         }
     }
 
-    public static readonly loginConfirmation = (req: Request, res: Response, next: NextFunction) => {
+    public static readonly loginConfirmation = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const token = req.header(headers.sessionToken)
             const userId = req.header(headers.sessionUserId)
-            const expiresAt = req.header(headers.sessionExpiresAt)
+            const expiresAt = req.header(headers.sessionExpiration)
             const deviceOS = req.header(headers.sessionDeviceOS)
-            const deviceIp = req.header(headers.sessionDeviceIp)
-            const deviceLocation = req.header(headers.sessionDeviceLocation)
+            const deviceIp = req.ip
+
+            const deviceInfo = await fetch(`https://ipinfo.io/${deviceIp}/json`).then(res => res.json())
+            const deviceLocation = {
+                city: deviceInfo.city,
+                region: deviceInfo.region,
+                country: deviceInfo.country
+            }
 
             if (!token || !userId || !deviceOS || !deviceIp || !deviceLocation || !expiresAt) {
                 next(new BadRequest(errorMessages.authNotProvided))

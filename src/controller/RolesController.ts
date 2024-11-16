@@ -13,7 +13,7 @@ export default class RolesController {
             const result = await collections.people.roles.insertOne(role)
 
             if (result) {
-                res.status(httpStatus.created).send(result)
+                res.status(httpStatus.created).send({ id: result.insertedId })
             } else {
                 next(new InternalServerError())
                 next()

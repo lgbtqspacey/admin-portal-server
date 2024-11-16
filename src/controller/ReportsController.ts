@@ -13,7 +13,7 @@ export default class ReportsController {
             const result = await collections.people.reports.insertOne(report)
 
             if (result) {
-                res.status(httpStatus.created).send(result)
+                res.status(httpStatus.created).send({ id: result.insertedId })
             } else {
                 next(new InternalServerError())
                 next()

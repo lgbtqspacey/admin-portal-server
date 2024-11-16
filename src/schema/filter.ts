@@ -16,7 +16,7 @@ const filterDefault = joi.object({
 const filterUser = joi.object({
     name: joi.string(),
     email: joi.string().email(),
-    discord_id: joi.string(),
+    discordId: joi.string(),
     id: joi.string().guid({ version: ['uuidv4'] }),
     username: joi.string(),
 }).concat(filterDefault)

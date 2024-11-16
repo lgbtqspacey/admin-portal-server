@@ -1,7 +1,7 @@
 export type Filter = {
     name?: string
     email?: string
-    discord_id?: string
+    discordId?: string
     id?: string
     username?: string
     page?: number
@@ -9,7 +9,7 @@ export type Filter = {
 }
 
 export type FilterReport = {
-    user_id: string
+    userId: string
     from?: string
     to?: string
     page?: number
@@ -25,20 +25,20 @@ export type Login = {
 export type User = {
     _id? : string
     id?: string
-    is_admin: boolean
+    isAdmin: boolean
     name: string
     email: string
     password: string
-    discord_id: string
+    discordId: string
     roles: string[]
-    date_of_birth: string
+    dateOfBirth: string
     pronouns: string
     phone: string
-    joined_at: string
+    joinedAt: string
     left_at: string
-    created_by: string
-    created_at: string
-    updated_at: string
+    createdBy: string
+    createdAt: string
+    updatedAt: string
 }
 
 export type Role = {
@@ -47,50 +47,50 @@ export type Role = {
     name: string
     description: string
     permissions: string[]
-    created_at: string
-    updated_at: string
+    createdAt: string
+    updatedAt: string
 }
 
 export type Report = {
     _id: string
     id?: string
-    user_id: string
+    userId: string
     type: string
-    is_first_occurrence: boolean
+    isFirstOccurrence: boolean
     severity: string
     description: string
-    date_time: string
+    dateTime: string
     place: string
-    additional_info: string
+    additionalInfo: string
     followup: string
     witnesses: ReportDetails[]
-    people_involved: ReportDetails[]
-    created_at: string
-    updated_at: string
+    peopleInvolved: ReportDetails[]
+    createdAt: string
+    updatedAt: string
 }
 
 export type ReportDetails = {
     name: string
-    contact_info: string
+    contactInfo: string
     relation: string
     report: string
 }
 
 export type Session = {
     _id?: string
-    user_id?: string
+    userId?: string
     token?: string
-    created_at?: string
-    expires_at?: string
-    updated_at?: string
-    device_info?: DeviceInfo
+    createdAt?: string
+    expiresAt?: string
+    updatedAt?: string
+    deviceInfo?: DeviceInfo
 }
 
 export type ConfirmationData = {
-    user_id: string
+    userId: string
     token: string
-    expires_at: string,
-    device_info: DeviceInfo
+    expiresAt: string,
+    deviceInfo: DeviceInfo
 }
 
 export type DeviceInfo = {

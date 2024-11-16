@@ -23,8 +23,8 @@ export default class AuthController {
                 const session = createSession(user._id.toString())
 
                 res.header(headers.sessionToken, session.token)
-                res.header(headers.sessionExpiration, session.expires_at)
-                res.header(headers.sessionUserId, session.user_id)
+                res.header(headers.sessionExpiration, session.expiresAt)
+                res.header(headers.sessionUserId, session.userId)
                 res.status(httpStatus.ok).send()
             }
             Log.info('controller', 'UserController :: Calling Endpoint :: Login')

@@ -25,9 +25,9 @@ export const getDataFromPreviousMiddleware = (key: string, req: Request, next: N
  */
 export const createSession = (userId: string): Session => {
     return {
-        user_id: userId,
+        userId: userId,
         token: crypto.randomBytes(32).toString('hex'),
-        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     }
 }
 
@@ -37,11 +37,11 @@ export const createSession = (userId: string): Session => {
 export const confirmSession = (confirmation: ConfirmationData): Session => {
     return {
         _id: uuid(),
-        created_at: new Date().toISOString(),
-        user_id: confirmation.user_id,
+        createdAt: new Date().toISOString(),
+        userId: confirmation.userId,
         token: confirmation.token,
-        expires_at: confirmation.expires_at,
-        device_info: confirmation.device_info
+        expiresAt: confirmation.expiresAt,
+        deviceInfo: confirmation.deviceInfo
     }
 }
 
@@ -51,7 +51,7 @@ export const confirmSession = (confirmation: ConfirmationData): Session => {
  */
 export const refreshSession = (): Session => {
     return {
-        updated_at: new Date().toISOString(),
-        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     }
 }

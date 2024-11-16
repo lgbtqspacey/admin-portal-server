@@ -22,7 +22,7 @@ export default class ValidateRequest {
 
                 if (data.id) filter.push({ _id: data.id })
                 if (data.email) filter.push({ email: data.email })
-                if (data.discord_id) filter.push({ discord_id: data.discord_id })
+                if (data.discordId) filter.push({ discord_id: data.discordId })
                 if (data.username) filter.push({ username: data.username })
 
                 res.locals[reqData.page] = data.page
@@ -54,7 +54,7 @@ export default class ValidateRequest {
                 const data: FilterReport = value
                 const filter = []
 
-                filter.push({ user_id: data.user_id })
+                filter.push({ user_id: data.userId })
                 if (data.from && !data.to) {
                     data.to = new Date().toISOString()
                     filter.push({ date: { $gte: data.from, $lte: data.to } })
@@ -106,7 +106,7 @@ export default class ValidateRequest {
                     const report: Report = value
 
                     report._id = uuid()
-                    report.created_at = new Date().toISOString()
+                    report.createdAt = new Date().toISOString()
 
                     res.locals[reqData.reportCreate] = report
                     next()
@@ -120,7 +120,7 @@ export default class ValidateRequest {
                     next()
                 } else {
                     const report: Report = value
-                    report.updated_at = new Date().toISOString()
+                    report.updatedAt = new Date().toISOString()
 
                     res.locals[reqData.filter] = { _id: report.id }
 
@@ -148,7 +148,7 @@ export default class ValidateRequest {
                     const role: Role = value
 
                     role._id = uuid()
-                    role.created_at = new Date().toISOString()
+                    role.createdAt = new Date().toISOString()
 
                     res.locals[reqData.roleCreate] = role
                     next()
@@ -163,7 +163,7 @@ export default class ValidateRequest {
                 } else {
                     const role: Role = value
 
-                    role.updated_at = new Date().toISOString()
+                    role.updatedAt = new Date().toISOString()
                     res.locals[reqData.filter] = { _id: role.id }
 
                     delete role.id
@@ -189,7 +189,7 @@ export default class ValidateRequest {
                 } else {
                     const user: User = value
                     user.password = Password.encrypt(value.password)
-                    user.created_at = new Date().toISOString()
+                    user.createdAt = new Date().toISOString()
                     user._id = uuid()
 
                     res.locals[reqData.userCreate] = user
@@ -206,7 +206,7 @@ export default class ValidateRequest {
                     const user: User = value
 
                     if (value.password) user.password = Password.encrypt(value.password)
-                    user.updated_at = new Date().toISOString()
+                    user.updatedAt = new Date().toISOString()
                     res.locals[reqData.filter] = { _id: user.id }
 
                     delete user.id
@@ -283,10 +283,10 @@ export default class ValidateRequest {
                 next()
             } else {
                 const confirmationData: ConfirmationData = {
-                    user_id: userId,
+                    userId: userId,
                     token: token,
-                    expires_at: expiresAt,
-                    device_info: { os: deviceOS, ip: deviceIp, location: deviceLocation }
+                    expiresAt: expiresAt,
+                    deviceInfo: { os: deviceOS, ip: deviceIp, location: deviceLocation }
                 }
                 res.locals[reqData.confirmationData] = confirmationData
                 next()

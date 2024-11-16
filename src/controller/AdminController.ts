@@ -13,7 +13,7 @@ export default class AdminController {
             const result = await collections.people.users.insertOne(user)
 
             if (result) {
-                res.status(httpStatus.created).send(result)
+                res.status(httpStatus.created).send({ id: result.insertedId })
             } else {
                 next(new InternalServerError())
                 next()

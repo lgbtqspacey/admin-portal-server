@@ -267,26 +267,28 @@ export default class ValidateRequest {
         try {
             const token = req.header(headers.sessionToken)
             const userId = req.header(headers.sessionUserId)
-            const expiresAt = req.header(headers.sessionExpiration)
+            const expiration = req.header(headers.sessionExpiration)
             const deviceOS = req.header(headers.sessionDeviceOS)
-            const deviceIp = req.ip
 
-            const deviceInfo = await fetch(`https://ipinfo.io/${deviceIp}/json`).then(res => res.json())
-            const deviceLocation = {
-                city: deviceInfo.city,
-                region: deviceInfo.region,
-                country: deviceInfo.country
+            const deviceIp = await fetch(`https://ipinfo.io/${req.ip}/json`).then(res => res.json())
+
+            const deviceInfo = {
+                ip: deviceIp.ip ?? '',
+                os: deviceOS ?? '',
+                city: deviceIp.city ?? '',
+                region: deviceIp.region ?? '',
+                country: deviceIp.country ?? '',
             }
 
-            if (!token || !userId || !deviceOS || !deviceIp || !deviceLocation || !expiresAt) {
+            if (!token || !userId || !deviceOS || !expiration) {
                 next(new BadRequest(errorMessages.authNotProvided))
                 next()
             } else {
                 const confirmationData: ConfirmationData = {
                     userId: userId,
                     token: token,
-                    expiresAt: expiresAt,
-                    deviceInfo: { os: deviceOS, ip: deviceIp, location: deviceLocation }
+                    expiresAt: expiration,
+                    deviceInfo: deviceInfo
                 }
                 res.locals[reqData.confirmationData] = confirmationData
                 next()

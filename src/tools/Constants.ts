@@ -55,5 +55,5 @@ export const headers = {
     sessionToken: 'sessionToken',
     sessionExpiration: 'sessionExpiration',
     sessionUserId: 'sessionUserId',
-    sessionDeviceOS: 'sessionDeviceOS'
+    sessionDeviceOS: 'sessionDeviceOS',
 }

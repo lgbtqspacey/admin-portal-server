@@ -111,4 +111,15 @@ adminRouter.delete(
     adminRouter
 )
 
+/**
+ * Session management routes
+ */
+adminRouter.get(
+    '/api/v1/admin/sessions',
+    Auth.session,
+    ValidateRequest.filter,
+    AdminController.getAllSessions,
+    adminRouter
+)
+
 export { adminRouter }

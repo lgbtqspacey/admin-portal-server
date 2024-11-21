@@ -11,7 +11,7 @@ export default class AuthController {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
             const password = getDataFromPreviousMiddleware(reqData.password, req, next)
 
-            const user = await collections.people.users.findOne(filter, { projection: { _id: 1, password: 1 } })
+            const user = await collections.users.findOne(filter, { projection: { _id: 1, password: 1 } })
 
             if (!user) {
                 next(new NotFound())
@@ -39,7 +39,7 @@ export default class AuthController {
         try {
             const session = getDataFromPreviousMiddleware(reqData.token, req, next)
 
-            const result = await collections.auth.sessions.deleteOne({ token: session })
+            const result = await collections.sessions.deleteOne({ token: session })
 
             if (result.deletedCount === 0) {
                 next(new NotFound())
@@ -62,7 +62,7 @@ export default class AuthController {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
 
-            const result = await collections.auth.sessions.deleteMany(filter)
+            const result = await collections.sessions.deleteMany(filter)
 
             if (result.deletedCount === 0) {
                 next(new NotFound())
@@ -86,7 +86,7 @@ export default class AuthController {
             const confirmationData = getDataFromPreviousMiddleware(reqData.confirmationData, req, next)
             const session = confirmSession(confirmationData)
 
-            const result = await collections.auth.sessions.insertOne(session as object)
+            const result = await collections.sessions.insertOne(session as object)
 
             if (result.insertedId) {
                 res.status(httpStatus.ok).send()

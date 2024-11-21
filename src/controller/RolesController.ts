@@ -10,7 +10,7 @@ export default class RolesController {
         try {
             const role = getDataFromPreviousMiddleware(reqData.roleCreate, req, next)
 
-            const result = await collections.people.roles.insertOne(role)
+            const result = await collections.roles.insertOne(role)
 
             if (result) {
                 res.status(httpStatus.created).send({ id: result.insertedId })
@@ -32,7 +32,7 @@ export default class RolesController {
             const page = getDataFromPreviousMiddleware(reqData.page, _req, next)
             const limit = getDataFromPreviousMiddleware(reqData.limit, _req, next)
 
-            const result = await collections.people.roles.find()
+            const result = await collections.roles.find()
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .toArray()
@@ -61,7 +61,7 @@ export default class RolesController {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
             const update = getDataFromPreviousMiddleware(reqData.roleUpdate, req, next)
 
-            const result = await collections.people.roles.findOneAndUpdate(filter, update, { returnDocument: 'after' })
+            const result = await collections.roles.findOneAndUpdate(filter, update, { returnDocument: 'after' })
 
             if (result) {
                 res.status(httpStatus.ok).send(result)
@@ -82,7 +82,7 @@ export default class RolesController {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
 
-            const result = await collections.people.roles.deleteOne(filter)
+            const result = await collections.roles.deleteOne(filter)
 
             if (result?.deletedCount) {
                 res.status(httpStatus.noContent).send()

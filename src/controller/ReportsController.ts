@@ -10,7 +10,7 @@ export default class ReportsController {
         try {
             const report = getDataFromPreviousMiddleware(reqData.reportCreate, req, next)
 
-            const result = await collections.people.reports.insertOne(report)
+            const result = await collections.reports.insertOne(report)
 
             if (result) {
                 res.status(httpStatus.created).send({ id: result.insertedId })
@@ -33,7 +33,7 @@ export default class ReportsController {
             const page = getDataFromPreviousMiddleware(reqData.page, req, next)
             const limit = getDataFromPreviousMiddleware(reqData.limit, req, next)
 
-            const result = await collections.people.reports.find(filter)
+            const result = await collections.reports.find(filter)
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .toArray()
@@ -62,7 +62,7 @@ export default class ReportsController {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
             const update = getDataFromPreviousMiddleware(reqData.reportUpdate, req, next)
 
-            const result = await collections.people.reports.findOneAndUpdate(filter, update, { returnDocument: 'after' })
+            const result = await collections.reports.findOneAndUpdate(filter, update, { returnDocument: 'after' })
 
             if (result) {
                 res.status(httpStatus.ok).send(result)
@@ -83,7 +83,7 @@ export default class ReportsController {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
 
-            const result = await collections.people.reports.deleteOne(filter)
+            const result = await collections.reports.deleteOne(filter)
 
             if (result?.deletedCount) {
                 res.status(httpStatus.noContent).send()

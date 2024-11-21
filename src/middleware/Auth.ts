@@ -13,7 +13,7 @@ export default class Auth {
                 next(new BadRequest(errorMessages.authNotProvided))
                 next()
             } else {
-                const result = await collections.auth.sessions.findOne({ token: token })
+                const result = await collections.sessions.findOne({ token: token })
 
                 if (!result) {
                     next(new Unauthorized(errorMessages.unauthorized))
@@ -26,7 +26,7 @@ export default class Auth {
                         next()
                     } else {
                         const refresh = refreshSession()
-                        await collections.auth.sessions.updateOne({ _id: result._id }, { $set: refresh })
+                        await collections.sessions.updateOne({ _id: result._id }, { $set: refresh })
                         next()
                     }
                 }

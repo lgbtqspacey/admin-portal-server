@@ -1,4 +1,6 @@
+import './tools/Sentry'
 import * as dotenv from 'dotenv'
+import * as sentry from '@sentry/node'
 import express, { Application } from 'express'
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import ErrorHandler from './middleware/ErrorHandler'
@@ -20,11 +22,9 @@ const client = new MongoClient(process.env.DB_URI as string, {
     }
 })
 
-/**
- * Starts the application and bind middlewares.
- */
 const start = () => {
     try {
+        sentry.setupExpressErrorHandler(app)
         app.use(ErrorHandler.httpErrorHandler)
 
         app.listen(PORT, () => {
@@ -35,9 +35,6 @@ const start = () => {
     }
 }
 
-/**
- * Connects to the database.
- */
 const connect = async () => {
     try {
         await client.connect()
@@ -49,24 +46,18 @@ const connect = async () => {
     }
 }
 
-const peopleDB = client.db('people')
-const authDB = client.db('auth')
+const db = client.db('admin_portal')
 
-/**
- * Declare databases and collections used in the application.
- * 
- * @template `collections.database.collection`
- * @example `collections.people.users`
- */
 const collections = {
-    people: {
-        users: peopleDB.collection('users'),
-        roles: peopleDB.collection('roles'),
-        reports: peopleDB.collection('reports'),
-    },
-    auth: {
-        sessions: authDB.collection('sessions'),
-    }
+    users: db.collection('users'),
+    roles: db.collection('roles'),
+    reports: db.collection('reports'),
+    sessions: db.collection('sessions'),
+    posts: db.collection('posts'),
+    guides: db.collection('guides'),
+    finances: db.collection('finances'),
+    docs: db.collection('docs'),
+    contracts: db.collection('contracts'),
 }
 
 export { collections }

@@ -1,6 +1,7 @@
 export const reqData = {
     filter: 'filter',
     filterReports: 'filterReports',
+    filterSessions: 'filterSessions',
     userCreate: 'userCreate',
     userUpdate: 'userUpdate',
     roleCreate: 'roleCreate',

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
 import { reportCreate, reportUpdate, roleCreate, roleUpdate, userCreate, userUpdate } from '../schema/document'
-import { filterReport, filterUser, id, login } from '../schema/filter'
+import { filterReport, filterSession, filterUser, id, login } from '../schema/filter'
 import { errorMessages, headers, reqData } from '../tools/Constants'
 import { BadRequest } from '../tools/Error'
 import Password from '../tools/Password'
@@ -22,7 +22,7 @@ export default class ValidateRequest {
 
                 if (data.id) filter.push({ _id: data.id })
                 if (data.email) filter.push({ email: data.email })
-                if (data.discordId) filter.push({ discord_id: data.discordId })
+                if (data.discordId) filter.push({ discordId: data.discordId })
                 if (data.username) filter.push({ username: data.username })
 
                 res.locals[reqData.page] = data.page
@@ -54,7 +54,7 @@ export default class ValidateRequest {
                 const data: FilterReport = value
                 const filter = []
 
-                filter.push({ user_id: data.userId })
+                filter.push({ userId: data.userId })
                 if (data.from && !data.to) {
                     data.to = new Date().toISOString()
                     filter.push({ date: { $gte: data.from, $lte: data.to } })
@@ -72,6 +72,29 @@ export default class ValidateRequest {
         }
     }
 
+    public static readonly filterSessions = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { error, value } = filterSession.validate({ ...req.params, ...req.query })
+
+            if (error) {
+                const message = error.details[0].message
+                next(new BadRequest(message))
+                next()
+            } else {
+                const data: FilterReport = value
+                const filter = []
+
+                filter.push({ userId: data.userId })
+                res.locals[reqData.page] = data.page
+                res.locals[reqData.limit] = data.limit
+                res.locals[reqData.filterSessions] = { $and: filter }
+                next()
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
     public static readonly id = (req: Request, res: Response, next: NextFunction) => {
         try {
             const { error, value } = id.validate(req.params.id)
@@ -82,7 +105,7 @@ export default class ValidateRequest {
                 next()
             } else {
                 if (req.url.includes('/auth/logout/')) {
-                    res.locals[reqData.filter] = { user_id: value }
+                    res.locals[reqData.filter] = { userId: value }
                 } else {
                     res.locals[reqData.filter] = { _id: value }
                 }

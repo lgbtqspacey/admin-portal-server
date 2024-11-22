@@ -22,7 +22,7 @@ const filterUser = joi.object({
 }).concat(filterDefault)
 
 const filterReport = joi.object({
-    user_id: joi.string().guid({ version: ['uuidv4'] }).required(),
+    userId: joi.string().guid({ version: ['uuidv4'] }).required(),
     to: joi.string().isoDate(),
     from: joi.when('to', {
         is: joi.exist(),
@@ -31,4 +31,9 @@ const filterReport = joi.object({
     }),
 }).concat(filterDefault)
 
-export { filterUser, filterReport, id, login }
+const filterSession = joi.object({
+    userId: joi.string().guid({ version: ['uuidv4'] }).required(),
+}).concat(filterDefault)
+
+export { filterReport, filterSession, filterUser, id, login }
+

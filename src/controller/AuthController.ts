@@ -101,4 +101,34 @@ export default class AuthController {
             next(error)
         }
     }
+
+    public static readonly getSessionsByUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
+            const page = getDataFromPreviousMiddleware(reqData.page, req, next)
+            const limit = getDataFromPreviousMiddleware(reqData.limit, req, next)
+
+            const result = await collections.sessions.find(filter)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .toArray()
+
+            if (result) {
+                res.status(httpStatus.ok).send({
+                    count: result.length,
+                    page: page,
+                    limit: limit,
+                    sessions: result
+                })
+            } else {
+                next(new InternalServerError())
+                next()
+            }
+            Log.info('controller', 'AdminController :: Calling Endpoint :: GetAllSessions')
+        } catch (error) {
+            res.locals[reqData.logTag] = 'controller'
+            res.locals[reqData.logTrigger] = 'AdminController :: Calling Endpoint :: GetAllSessions'
+            next(error)
+        }
+    }
 }

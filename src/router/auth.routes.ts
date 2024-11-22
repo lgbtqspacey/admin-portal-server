@@ -5,9 +5,6 @@ import ValidateRequest from '../middleware/ValidateRequest'
 
 const authRouter = express.Router()
 
-/**
- * Auth routes
- */
 authRouter.post(
     '/api/v1/auth/login',
     ValidateRequest.login,
@@ -35,6 +32,14 @@ authRouter.post(
     Auth.session,
     ValidateRequest.id,
     AuthController.logoutAllDevices,
+    authRouter
+)
+
+authRouter.get(
+    '/api/v1/auth/sessions/:id',
+    Auth.session,
+    ValidateRequest.filterSessions,
+    AuthController.getSessionsByUser,
     authRouter
 )
 

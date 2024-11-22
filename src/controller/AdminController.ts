@@ -99,49 +99,4 @@ export default class AdminController {
             next(error)
         }
     }
-
-    public static readonly getAllSessions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
-            const page = getDataFromPreviousMiddleware(reqData.page, req, next)
-            const limit = getDataFromPreviousMiddleware(reqData.limit, req, next)
-
-            const result = await collections.sessions.aggregate([
-                {
-                    $lookup: {
-                        from: collections.users,
-                        localField: 'userId',
-                        foreignField: '_id',
-                        as: 'user',
-                    }
-                },
-                { $unwind: '$user' },
-                { $match: filter },
-                {
-                    $project: {
-                        '_id': 1,
-                        'user._id': 1,
-                        'user.name': 1,
-                        'user.email': 1,
-                        'createdAt': 1,
-                        'updatedAt': 1,
-                        'expiresAt': 1,
-                        'deviceInfo': 1,
-                    }
-                }
-            ]).skip(page * limit).limit(limit).toArray()
-
-            if (result) {
-                res.status(httpStatus.ok).send(result)
-            } else {
-                next(new InternalServerError())
-                next()
-            }
-            Log.info('controller', 'AdminController :: Calling Endpoint :: GetAllSessions')
-        } catch (error) {
-            res.locals[reqData.logTag] = 'controller'
-            res.locals[reqData.logTrigger] = 'AdminController :: Calling Endpoint :: GetAllSessions'
-            next(error)
-        }
-    }
 }

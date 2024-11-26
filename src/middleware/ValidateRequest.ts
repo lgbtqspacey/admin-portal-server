@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
 import { reportCreate, reportUpdate, roleCreate, roleUpdate, userCreate, userUpdate } from '../schema/document'
-import { filterReport, filterSession, filterUser, id, login } from '../schema/filter'
+import { filterReport, filterSession, filterUser, id, login, filterDefault } from '../schema/filter'
 import { errorMessages, headers, reqData } from '../tools/Constants'
 import { BadRequest } from '../tools/Error'
 import Password from '../tools/Password'
 import { ConfirmationData, Filter, FilterReport, Login, Report, Role, User } from '../types/Schemas'
 
 export default class ValidateRequest {
-    public static readonly filter = (req: Request, res: Response, next: NextFunction) => {
+    public static readonly filterUser = (req: Request, res: Response, next: NextFunction) => {
         try {
             const { error, value } = filterUser.validate(req.query)
 
@@ -88,6 +88,26 @@ export default class ValidateRequest {
                 res.locals[reqData.page] = data.page
                 res.locals[reqData.limit] = data.limit
                 res.locals[reqData.filterSessions] = { $and: filter }
+                next()
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    public static readonly filterDefault = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { error, value } = filterDefault.validate(req.query)
+
+            if (error) {
+                const message = error.details[0].message
+                next(new BadRequest(message))
+                next()
+            } else {
+                const data: Filter = value
+
+                res.locals[reqData.page] = data.page
+                res.locals[reqData.limit] = data.limit
                 next()
             }
         } catch (error) {

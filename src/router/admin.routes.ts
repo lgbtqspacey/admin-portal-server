@@ -20,7 +20,7 @@ adminRouter.post(
 adminRouter.get(
     '/api/v1/admin/users',
     Auth.session,
-    ValidateRequest.filter,
+    ValidateRequest.filterUser,
     AdminController.getUser,
     adminRouter
 )
@@ -55,7 +55,7 @@ adminRouter.post(
 adminRouter.get(
     '/api/v1/admin/roles',
     Auth.session,
-    ValidateRequest.filter,
+    ValidateRequest.filterDefault,
     RolesController.getRoles,
     adminRouter
 )

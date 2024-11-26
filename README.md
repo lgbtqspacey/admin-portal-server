@@ -41,3 +41,7 @@ SENTRY_DSN=''
 ```bash
 npm run dev
 ```
+
+## Docs
+
+Com o servidor rodando, abra seu navegador em `http://localhost:3000/api/v1/docs` para ver a documentação da API.

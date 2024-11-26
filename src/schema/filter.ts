@@ -35,5 +35,5 @@ const filterSession = joi.object({
     userId: joi.string().guid({ version: ['uuidv4'] }).required(),
 }).concat(filterDefault)
 
-export { filterReport, filterSession, filterUser, id, login }
+export { filterDefault, filterReport, filterSession, filterUser, id, login }
 

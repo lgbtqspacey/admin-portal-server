@@ -35,7 +35,7 @@
     "dotenv": "16.3.1",
     "express": "4.21.1",
     "joi": "17.13.3",
-    "mongodb": "6.8.1",
+    "mongodb": "6.11.0",
     "swagger-ui-express": "5.0.1",
     "uuidv4": "6.2.13"
   },

@@ -1,16 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
-import { reportCreate, reportUpdate, roleCreate, roleUpdate, userCreate, userUpdate } from '../schema/document'
-import { filterReport, filterSession, filterUser, id, login, filterDefault } from '../schema/filter'
+import DocumentSchema from '../schema/DocumentSchema'
+import FilterSchema from '../schema/FilterSchema'
 import { errorMessages, headers, reqData } from '../tools/Constants'
 import { BadRequest } from '../tools/Error'
 import Password from '../tools/Password'
-import { ConfirmationData, Filter, FilterReport, Login, Report, Role, User } from '../types/Schemas'
+import { Filter, FilterReport } from '../types/Filter'
+import { ConfirmationData, Login, Report, Role, User } from '../types/Schemas'
 
 export default class ValidateRequest {
     public static readonly filterUser = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { error, value } = filterUser.validate(req.query)
+            const { error, value } = FilterSchema.filterUser.validate(req.query)
 
             if (error) {
                 const message = error.details[0].message
@@ -44,7 +45,7 @@ export default class ValidateRequest {
 
     public static readonly filterReports = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { error, value } = filterReport.validate(req.query)
+            const { error, value } = FilterSchema.filterReport.validate(req.query)
 
             if (error) {
                 const message = error.details[0].message
@@ -74,7 +75,7 @@ export default class ValidateRequest {
 
     public static readonly filterSessions = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { error, value } = filterSession.validate({ ...req.params, ...req.query })
+            const { error, value } = FilterSchema.filterSession.validate({ ...req.params, ...req.query })
 
             if (error) {
                 const message = error.details[0].message
@@ -97,7 +98,7 @@ export default class ValidateRequest {
 
     public static readonly filterDefault = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { error, value } = filterDefault.validate(req.query)
+            const { error, value } = FilterSchema.filterDefault.validate(req.query)
 
             if (error) {
                 const message = error.details[0].message
@@ -117,7 +118,7 @@ export default class ValidateRequest {
 
     public static readonly id = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { error, value } = id.validate(req.params.id)
+            const { error, value } = FilterSchema.id.validate(req.params.id)
 
             if (error) {
                 const message = error.details[0].message
@@ -139,7 +140,7 @@ export default class ValidateRequest {
     public static readonly report = (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.method === 'POST') {
-                const { error, value } = reportCreate.validate(req.body)
+                const { error, value } = DocumentSchema.reportCreate.validate(req.body)
 
                 if (error) {
                     const message = error.details[0].message
@@ -155,7 +156,7 @@ export default class ValidateRequest {
                     next()
                 }
             } else if (req.method === 'PUT') {
-                const { error, value } = reportUpdate.validate({ ...req.params, ...req.body })
+                const { error, value } = DocumentSchema.reportUpdate.validate({ ...req.params, ...req.body })
 
                 if (error) {
                     const message = error.details[0].message
@@ -181,7 +182,7 @@ export default class ValidateRequest {
     public static readonly role = (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.method === 'POST') {
-                const { error, value } = roleCreate.validate(req.body)
+                const { error, value } = DocumentSchema.roleCreate.validate(req.body)
 
                 if (error) {
                     const message = error.details[0].message
@@ -197,7 +198,7 @@ export default class ValidateRequest {
                     next()
                 }
             } else if (req.method === 'PUT') {
-                const { error, value } = roleUpdate.validate({ ...req.params, ...req.body })
+                const { error, value } = DocumentSchema.roleUpdate.validate({ ...req.params, ...req.body })
 
                 if (error) {
                     const message = error.details[0].message
@@ -223,7 +224,7 @@ export default class ValidateRequest {
     public static readonly user = (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.method === 'POST') {
-                const { error, value } = userCreate.validate(req.body)
+                const { error, value } = DocumentSchema.userCreate.validate(req.body)
 
                 if (error) {
                     const message = error.details[0].message
@@ -239,7 +240,7 @@ export default class ValidateRequest {
                     next()
                 }
             } else if (req.method === 'PATCH') {
-                const { error, value } = userUpdate.validate({ ...req.params, ...req.body })
+                const { error, value } = DocumentSchema.userUpdate.validate({ ...req.params, ...req.body })
 
                 if (error) {
                     const message = error.details[0].message
@@ -276,7 +277,7 @@ export default class ValidateRequest {
                 country: deviceIp.country ?? '',
             }
 
-            const { error, value } = login.validate(req.body)
+            const { error, value } = FilterSchema.login.validate(req.body)
 
             if (error) {
                 const message = error.details[0].message
@@ -301,7 +302,7 @@ export default class ValidateRequest {
             next(error)
         }
     }
-    
+
     public static readonly loginConfirmation = (req: Request, res: Response, next: NextFunction) => {
         try {
             const token = req.header(headers.sessionToken)

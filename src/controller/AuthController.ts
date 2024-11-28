@@ -90,13 +90,26 @@ export default class AuthController {
             const confirmationData = getDataFromPreviousMiddleware(reqData.confirmationData, req, next)
             const session = confirmSession(confirmationData)
 
-            const result = await collections.sessions.findOneAndUpdate(session.filter, session.query)
+            const result = await collections.sessions.findOneAndUpdate(session.filter, session.query, { returnDocument: 'after' })
 
-            if (result?._id) {
-                res.status(httpStatus.ok).send()
-            } else if (!result) {
-                next(new NotFound())
-                next()
+            if (result) {
+                const user = await collections.users.findOne(
+                    { _id: result.value.userId },
+                    {
+                        projection: {
+                            _id: 1,
+                            accessLevel: 1,
+                            name: 1,
+                            pronouns: 1
+                        }
+                    }
+                )
+                if (user) {
+                    res.status(httpStatus.ok).send(user)
+                } else {
+                    next(new InternalServerError())
+                    next()
+                }
             } else {
                 next(new InternalServerError())
                 next()

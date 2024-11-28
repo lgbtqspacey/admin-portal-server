@@ -25,8 +25,8 @@ export default class Auth {
                         next(new Unauthorized(errorMessages.unauthorized))
                         next()
                     } else {
-                        const refresh = refreshSession()
-                        await collections.sessions.updateOne({ _id: result._id }, { $set: refresh })
+                        const refresh = refreshSession(result.user_id, token)
+                        await collections.sessions.findOneAndUpdate(refresh.filter, refresh.query)
                         next()
                     }
                 }

@@ -263,8 +263,19 @@ export default class ValidateRequest {
         }
     }
 
-    public static readonly login = (req: Request, res: Response, next: NextFunction) => {
+    public static readonly login = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const deviceOS = req.header(headers.sessionDeviceOS)
+            const deviceIp = await fetch(`https://ipinfo.io/${req.ip}/json`).then(res => res.json())
+
+            const deviceInfo = {
+                ip: deviceIp.ip ?? '',
+                os: deviceOS ?? '',
+                city: deviceIp.city ?? '',
+                region: deviceIp.region ?? '',
+                country: deviceIp.country ?? '',
+            }
+
             const { error, value } = login.validate(req.body)
 
             if (error) {
@@ -283,6 +294,25 @@ export default class ValidateRequest {
 
                 res.locals[reqData.filter] = { $and: filter }
                 res.locals[reqData.password] = password
+                res.locals[reqData.deviceInfo] = deviceInfo
+                next()
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+    
+    public static readonly loginConfirmation = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = req.header(headers.sessionToken)
+            const userId = req.header(headers.sessionUserId)
+
+            if (!token || !userId) {
+                next(new BadRequest(errorMessages.authNotProvided))
+                next()
+            } else {
+                const confirmationData: ConfirmationData = { userId, token }
+                res.locals[reqData.confirmationData] = confirmationData
                 next()
             }
         } catch (error) {
@@ -299,41 +329,6 @@ export default class ValidateRequest {
                 next()
             } else {
                 res.locals[reqData.token] = token
-                next()
-            }
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    public static readonly loginConfirmation = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const token = req.header(headers.sessionToken)
-            const userId = req.header(headers.sessionUserId)
-            const expiration = req.header(headers.sessionExpiration)
-            const deviceOS = req.header(headers.sessionDeviceOS)
-
-            const deviceIp = await fetch(`https://ipinfo.io/${req.ip}/json`).then(res => res.json())
-
-            const deviceInfo = {
-                ip: deviceIp.ip ?? '',
-                os: deviceOS ?? '',
-                city: deviceIp.city ?? '',
-                region: deviceIp.region ?? '',
-                country: deviceIp.country ?? '',
-            }
-
-            if (!token || !userId || !deviceOS || !expiration) {
-                next(new BadRequest(errorMessages.authNotProvided))
-                next()
-            } else {
-                const confirmationData: ConfirmationData = {
-                    userId: userId,
-                    token: token,
-                    expiresAt: expiration,
-                    deviceInfo: deviceInfo
-                }
-                res.locals[reqData.confirmationData] = confirmationData
                 next()
             }
         } catch (error) {

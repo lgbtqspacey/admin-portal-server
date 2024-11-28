@@ -16,6 +16,7 @@ export const reqData = {
     limit: 'limit',
     token: 'token',
     confirmationData: 'confirmationData',
+    deviceInfo: 'deviceInfo',
 }
 
 export const errorMessages = {
@@ -57,4 +58,11 @@ export const headers = {
     sessionExpiration: 'sessionExpiration',
     sessionUserId: 'sessionUserId',
     sessionDeviceOS: 'sessionDeviceOS',
+}
+
+export const accessLevel = {
+    admin: 'admin',
+    editor: 'editor',
+    user: 'user',
+    none: 'none',
 }

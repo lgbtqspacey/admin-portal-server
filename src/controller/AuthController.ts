@@ -4,14 +4,16 @@ import { errorMessages, headers, httpStatus, reqData } from '../tools/Constants'
 import { BadRequest, InternalServerError, NotFound } from '../tools/Error'
 import { confirmSession, createSession, getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
+import { User } from '../types/Schemas'
 
 export default class AuthController {
     public static readonly login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const filter = getDataFromPreviousMiddleware(reqData.filter, req, next)
             const password = getDataFromPreviousMiddleware(reqData.password, req, next)
+            const deviceInfo = getDataFromPreviousMiddleware(reqData.deviceInfo, req, next)
 
-            const user = await collections.users.findOne(filter, { projection: { _id: 1, password: 1 } })
+            const user = await collections.users.findOne(filter, { projection: { _id: 1, password: 1, accessLevel: 1 } })
 
             if (!user) {
                 next(new NotFound())
@@ -20,7 +22,9 @@ export default class AuthController {
                 next(new BadRequest(errorMessages.loginFailed))
                 next()
             } else {
-                const session = createSession(user._id.toString())
+                const session = createSession(user as unknown as User, deviceInfo)
+
+                await collections.sessions.insertOne(session as object)
 
                 res.header(headers.sessionToken, session.token)
                 res.header(headers.sessionExpiration, session.expiresAt)
@@ -86,10 +90,13 @@ export default class AuthController {
             const confirmationData = getDataFromPreviousMiddleware(reqData.confirmationData, req, next)
             const session = confirmSession(confirmationData)
 
-            const result = await collections.sessions.insertOne(session as object)
+            const result = await collections.sessions.findOneAndUpdate(session.filter, session.query)
 
-            if (result.insertedId) {
+            if (result?._id) {
                 res.status(httpStatus.ok).send()
+            } else if (!result) {
+                next(new NotFound())
+                next()
             } else {
                 next(new InternalServerError())
                 next()

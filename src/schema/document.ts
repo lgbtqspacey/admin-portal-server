@@ -1,4 +1,5 @@
 import joi from 'joi'
+import { accessLevel } from '../tools/Constants'
 
 const reportCreate = joi.object({
     userId: joi.string().required(),
@@ -41,7 +42,7 @@ const roleUpdate = joi.object({
 }).concat(roleCreate)
 
 const userCreate = joi.object({
-    isAdmin: joi.boolean().required().default(false),
+    accessLevel: joi.string().valid(...Object.values(accessLevel)).required(),
     name: joi.string().required(),
     username: joi.string().required(),
     email: joi.string().email().required(),
@@ -62,7 +63,7 @@ const userCreate = joi.object({
 
 const userUpdate = joi.object({
     id: joi.string().guid({ version: ['uuidv4'] }).required(),
-    isAdmin: joi.boolean(),
+    accessLevel: joi.string().valid(...Object.values(accessLevel)),
     name: joi.string(),
     username: joi.string(),
     email: joi.string().email(),
@@ -75,7 +76,7 @@ const userUpdate = joi.object({
     joinedAt: joi.string(),
     leftAt: joi.string(),
 }).or(
-    'isAdmin',
+    'accessLevel',
     'name',
     'username',
     'email',

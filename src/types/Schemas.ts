@@ -25,7 +25,7 @@ export type Login = {
 export type User = {
     _id? : string
     id?: string
-    isAdmin: boolean
+    accessLevel: string
     name: string
     email: string
     password: string
@@ -77,20 +77,21 @@ export type ReportDetails = {
 }
 
 export type Session = {
-    _id?: string
-    userId?: string
-    token?: string
-    createdAt?: string
-    expiresAt?: string
+    _id: string
+    userId: string
+    token: string
+    createdAt: string
+    expiresAt: string
     updatedAt?: string
-    deviceInfo?: DeviceInfo
+    deviceInfo: DeviceInfo
+    accessLevel: string
+    confirmed: boolean
+    confirmedAt?: string
 }
 
 export type ConfirmationData = {
     userId: string
     token: string
-    expiresAt: string,
-    deviceInfo: DeviceInfo
 }
 
 export type DeviceInfo = {

@@ -94,7 +94,7 @@ export default class AuthController {
 
             if (result) {
                 const user = await collections.users.findOne(
-                    { _id: result.value.userId },
+                    { _id: result.userId },
                     {
                         projection: {
                             _id: 1,

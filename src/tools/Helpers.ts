@@ -19,7 +19,6 @@ export const getDataFromPreviousMiddleware = (key: string, req: Request, next: N
     }
 }
 
-
 /**
  * Generates a user session
  */

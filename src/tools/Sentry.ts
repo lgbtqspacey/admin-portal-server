@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' })
 
 sentry.init({
-    enabled: true,
+    enabled: false,
     dsn: process.env.SENTRY_DSN,
     integrations: [
         nodeProfilingIntegration(),

@@ -22,7 +22,7 @@ authRouter.post(
 authRouter.post(
     '/api/v1/auth/logout',
     Auth.session,
-    ValidateRequest.login,
+    ValidateRequest.logout,
     AuthController.logout,
     authRouter
 )

@@ -1,55 +1,43 @@
-import { LogInfo, Tag } from '../types/Log'
+import { Tag } from '../types/Log'
 
 export default class Log {
     private static readonly _timestamp = new Date().toISOString()
     private static readonly _separator = '\n----------------------------------------------------------------\n'
 
     public static readonly debug = (tag: Tag, message: string, details?: object): void => {
-        const log: LogInfo = {
-            message: this._maskString(message),
-            tag: tag,
-            timestamp: this._timestamp,
-            level: 'debug',
-        }
-        if (details) log.details = this._maskObject(details)
+        const log = `${this._timestamp} - [DEBUG] :: ${tag} :: ${this._maskString(message)}`
 
-        console.debug(this._separator, log)
+        if (details) {
+            const maskDetails = this._maskObject(details)
+            console.debug(this._separator, log, ':: details:', maskDetails)
+        } else {
+            console.debug(this._separator, log)
+        }
     }
 
     public static readonly info = (tag: Tag, message: string, details?: object): void => {
-        const log: LogInfo = {
-            message: this._maskString(message),
-            tag: tag,
-            timestamp: this._timestamp,
-            level: 'info',
-        }
-        if (details) log.details = this._maskObject(details)
+        const log = `${this._timestamp} - [INFO] :: ${tag} :: ${this._maskString(message)}`
 
-        console.info(this._separator, log)
+        if (details) {
+            const maskDetails = this._maskObject(details)
+            console.debug(this._separator, log, ':: details:', maskDetails)
+        } else {
+            console.debug(this._separator, log)
+        }
     }
 
     public static readonly warn = (tag: Tag, message: string): void => {
-        const log: LogInfo = {
-            message: this._maskString(message),
-            tag: tag,
-            timestamp: this._timestamp,
-            level: 'warn',
-        }
+        const log = `${this._timestamp} - [WARN] :: ${tag} :: ${this._maskString(message)}`
 
         console.warn(this._separator, log)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static readonly error = (tag: Tag, message: string, error: any): void => {
-        const log: LogInfo = {
-            message: this._maskString(message),
-            tag: tag,
-            timestamp: this._timestamp,
-            level: 'error',
-            stacktrace: this._maskString(error.stack),
-        }
+        const log = `${this._timestamp} - [ERROR] :: ${tag} :: ${this._maskString(message)}`
+        const stacktrace = this._maskString(error.stack)
 
-        console.error(this._separator, log)
+        console.error(this._separator, log, ':: error:', stacktrace)
     }
 
     private static readonly _maskObject = (data: object): object => {

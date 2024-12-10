@@ -15,7 +15,6 @@ export default class FilterSchema {
     })
 
     public static readonly filterUser = joi.object({
-        name: joi.string(),
         email: joi.string().email(),
         discordId: joi.string(),
         id: joi.string().guid({ version: ['uuidv4'] }),

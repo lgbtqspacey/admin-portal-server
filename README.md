@@ -1,34 +1,34 @@
-# Introdução
+# Introduction
 
-Este repositório fornece o backend para a aplicação interna da LGBTQ+Spacey.
+This repository provides the backend for the LGBTQ+Spacey internal application.
 
-## Requisitos
+## Requirements
 
-- Node.js 20.x ou superior
+- Node.js 20.x or higher
 
-## Instalação
+## Installation
 
-Para instalar o backend, siga os seguintes passos:
+To install the backend, follow these steps:
 
-1. Clone o repositório:
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/LGBTQSpacey/backend.git
+git clone https://github.com/lgbtqspacey/admin-portal-server.git
 ```
 
-2. Instale as dependências:
+2. Install the dependencies:
 
 ```bash
 npm install
 ```
 
-3. Configure as variáveis de ambiente:
+3. Set the environment variables:
 
 ```bash
 touch .env
 ```
 
-Edite o arquivo `.env` e defina as variáveis de ambiente necessárias.
+Edit the `.env` file and set the necessary environment variables.
 
 ```bash
 DB_URI=''
@@ -36,7 +36,7 @@ JWT_SECRET=''
 SENTRY_DSN=''
 ```
 
-## Inicie o servidor
+## Start the server
 
 ```bash
 npm run dev
@@ -44,4 +44,6 @@ npm run dev
 
 ## Docs
 
-Com o servidor rodando, abra seu navegador em `http://localhost:3000/api/v1/docs` para ver a documentação da API.
+With the server running, open your browser to `http://localhost:3000/api/v1/docs` to view the API documentation.
+
+### Check out the application [here](https://github.com/lgbtqspacey/admin-portal)

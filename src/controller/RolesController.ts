@@ -42,7 +42,7 @@ export default class RolesController {
                     count: result.length,
                     page: page,
                     limit: limit,
-                    roles: result
+                    data: result
                 })
             } else {
                 next(new InternalServerError())

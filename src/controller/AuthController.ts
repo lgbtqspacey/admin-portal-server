@@ -138,7 +138,7 @@ export default class AuthController {
                     count: result.length,
                     page: page,
                     limit: limit,
-                    sessions: result
+                    data: result
                 })
             } else {
                 next(new InternalServerError())

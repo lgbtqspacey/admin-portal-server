@@ -34,7 +34,7 @@ export default class ValidateRequest {
                     res.locals[reqData.projection] = { password: 0 }
                 } else {
                     res.locals[reqData.filter] = {}
-                    res.locals[reqData.projection] = { _id: 1, name: 1, email: 1 }
+                    res.locals[reqData.projection] = { _id: 1, name: 1, pronouns: 1, accessLevel: 1 }
                 }
                 next()
             }

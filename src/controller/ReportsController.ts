@@ -43,7 +43,7 @@ export default class ReportsController {
                     count: result.length,
                     page: page,
                     limit: limit,
-                    reports: result
+                    data: result
                 })
             } else {
                 next(new InternalServerError())

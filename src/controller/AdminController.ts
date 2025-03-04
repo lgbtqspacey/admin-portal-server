@@ -44,7 +44,7 @@ export default class AdminController {
                     count: result.length,
                     page: page,
                     limit: limit,
-                    users: result
+                    data: result
                 })
             } else {
                 next(new NotFound())

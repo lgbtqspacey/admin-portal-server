@@ -66,3 +66,23 @@ export const accessLevel = {
     user: 'user',
     none: 'none',
 }
+
+export const reportSeverity = {
+    none: 'none',
+    low: 'low',
+    medium: 'medium',
+    high: 'high',
+}
+
+export const reportType = {
+    feedback: 'feedback',
+    misconduct: 'misconduct',
+    other: 'other',
+}
+
+export const reportStatus = {
+    created: 'created',
+    underAnalysis: 'underAnalysis',
+    withManagement: 'withManagement',
+    done: 'done',
+}

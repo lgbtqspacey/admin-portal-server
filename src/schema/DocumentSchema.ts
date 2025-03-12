@@ -1,15 +1,14 @@
 import joi from 'joi'
-import { accessLevel } from '../tools/Constants'
+import { accessLevel, reportSeverity, reportStatus, reportType } from '../tools/Constants'
 
 export default class DocumentSchema {
     public static readonly reportCreate = joi.object({
         userId: joi.string().required(),
-        type: joi.string().required(),
-        isFirstOccurrence: joi.boolean().required(),
-        severity: joi.string().required(),
+        type: joi.string().valid(...Object.values(reportType)).required(),
+        status: joi.string().valid(...Object.values(reportStatus)).required(),
+        severity: joi.string().valid(...Object.values(reportSeverity)).required(),
         description: joi.string().required(),
-        date: joi.string().isoDate().required(),
-        time: joi.string().required(),
+        dateTime: joi.string().isoDate().required(),
         place: joi.string().required(),
         additionalInfo: joi.string().required(),
         followup: joi.string().required().allow(''),
@@ -47,13 +46,12 @@ export default class DocumentSchema {
         name: joi.string().required(),
         username: joi.string().required(),
         email: joi.string().email().required(),
-        password: joi.when('is_admin', {
-            is: true,
-            then: joi.string().min(8).max(64).required(),
-            otherwise: joi.not()
-        }),
+        password: joi.string().min(8).max(64).required(),
         discordId: joi.string(),
-        roles: joi.array().items(joi.string()).required(),
+        teams: joi.array().items(joi.object({
+            name: joi.string().required(),
+            role: joi.string().required(),
+        })).required(),
         dateOfBirth: joi.string().required(),
         pronouns: joi.string().required(),
         phone: joi.string().required(),
@@ -83,7 +81,7 @@ export default class DocumentSchema {
         'email',
         'password',
         'discordId',
-        'roles',
+        'teams',
         'dateOfBirth',
         'pronouns',
         'phone',

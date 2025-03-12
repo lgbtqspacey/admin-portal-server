@@ -21,7 +21,7 @@ export class NotFound extends BaseError {
 }
 
 export class Conflict extends MongoServerError {
-    constructor(message: string) {
+    constructor(message: string = errorMessages.conflict) {
         super({ message })
         Object.setPrototypeOf(this, Conflict.prototype)
     }

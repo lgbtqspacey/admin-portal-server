@@ -32,7 +32,6 @@ Edit the `.env` file and set the necessary environment variables.
 
 ```bash
 DB_URI=''
-JWT_SECRET=''
 SENTRY_DSN=''
 ```
 

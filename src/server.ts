@@ -1,8 +1,9 @@
 import './tools/Sentry'
-import * as dotenv from 'dotenv'
 import * as sentry from '@sentry/node'
+import * as dotenv from 'dotenv'
 import express, { Application } from 'express'
 import { MongoClient, ServerApiVersion } from 'mongodb'
+import { Sequelize } from 'sequelize'
 import ErrorHandler from './middleware/ErrorHandler'
 import { routes } from './router/routes'
 import Log from './tools/Log'
@@ -14,6 +15,7 @@ const app: Application = express()
 
 routes(app)
 
+// todo: remove
 const client = new MongoClient(process.env.DB_URI as string, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -21,6 +23,15 @@ const client = new MongoClient(process.env.DB_URI as string, {
         deprecationErrors: true,
     }
 })
+
+const sequelize = new Sequelize(
+    process.env.DB_NAME ?? '',
+    process.env.DB_USERNAME ?? '',
+    process.env.DB_PASSWORD ?? '',
+    {
+        host: process.env.DB_HOST ?? '',
+        dialect: 'mssql',
+    })
 
 const start = () => {
     try {
@@ -37,15 +48,15 @@ const start = () => {
 
 const connect = async () => {
     try {
-        await client.connect()
-        await client.db().command({ ping: 1 })
-        Log.info('database', 'MongoDB Connected')
+        await sequelize.authenticate()
+        Log.info('database', 'Database Connected')
     } catch (error) {
-        await client.close()
-        Log.error('database', 'MongoDB Connection', error)
+        await sequelize.close()
+        Log.error('database', 'DB Connection', error)
     }
 }
 
+// todo: remove
 const db = client.db('admin_portal')
 
 const collections = {
@@ -60,7 +71,7 @@ const collections = {
     contracts: db.collection('contracts'),
 }
 
-export { collections }
+export { collections, sequelize }
 
 start()
 connect()

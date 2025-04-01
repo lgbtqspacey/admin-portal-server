@@ -8,7 +8,7 @@ const Team = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false
+            allowNull: false,
         },
         code: {
             type: DataTypes.STRING,
@@ -16,12 +16,13 @@ const Team = sequelize.define(
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
-        }
+            allowNull: false,
+        },
     },
     {
-        tableName: 'teams'
-    }
+        tableName: 'teams',
+        indexes: [{ unique: true, fields: ['id', 'code'] }],
+    },
 )
 
 export default Team

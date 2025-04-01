@@ -10,7 +10,7 @@ const User = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
-            primaryKey: true
+            primaryKey: true,
         },
         accessLevelId: {
             type: DataTypes.INTEGER,
@@ -18,7 +18,7 @@ const User = sequelize.define(
             references: {
                 model: AccessLevel,
                 key: 'id',
-                deferrable: new Deferrable.INITIALLY_IMMEDIATE
+                deferrable: new Deferrable.INITIALLY_IMMEDIATE,
             }
         },
         roleId: {
@@ -27,61 +27,62 @@ const User = sequelize.define(
             references: {
                 model: Role,
                 key: 'id',
-                deferrable: new Deferrable.INITIALLY_IMMEDIATE
+                deferrable: new Deferrable.INITIALLY_IMMEDIATE,
             }
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         username: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         discordId: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         dateOfBirth: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         pronouns: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         phone: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         joinedAt: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         leftAt: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         createdAt: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         createdBy: {
             type: DataTypes.STRING,
-            allowNull: false
-        }
+            allowNull: false,
+        },
     },
     {
-        tableName: 'users'
-    }
+        tableName: 'users',
+        indexes: [{ unique: true, fields: ['id', 'email', 'username', 'discordId'] }],
+    },
 )
 
 export default User

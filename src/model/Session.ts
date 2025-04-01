@@ -9,7 +9,7 @@ const Session = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
-            primaryKey: true
+            primaryKey: true,
         },
         userId: {
             type: DataTypes.INTEGER,
@@ -17,55 +17,59 @@ const Session = sequelize.define(
             references: {
                 model: User,
                 key: 'id',
-                deferrable: new Deferrable.INITIALLY_IMMEDIATE
+                deferrable: new Deferrable.INITIALLY_IMMEDIATE,
             }
         },
         token: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         createdAt: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         expiresAt: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         deviceIp: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         deviceOs: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         city: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         region: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         country: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         confirmed: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: false
+            defaultValue: false,
         },
         confirmedAt: {
             type: DataTypes.STRING,
             allowNull: true,
-            defaultValue: null
+            defaultValue: null,
         },
     },
     {
-        tableName: 'sessions'
-    }
+        tableName: 'sessions',
+        indexes: [
+            { unique: true, fields: ['id', 'token'] },
+            { unique: false, fields: ['userId'] },
+        ],
+    },
 )
 
 export default Session

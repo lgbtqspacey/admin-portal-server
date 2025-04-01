@@ -9,21 +9,22 @@ const AccessLevel = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false
+            allowNull: false,
         },
         code: {
             type: DataTypes.ENUM,
             allowNull: false,
-            values: [...Object.values(accessLevel)]
+            values: [...Object.values(accessLevel)],
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         }
     },
     {
-        tableName: 'access_levels'
-    }
+        tableName: 'access_levels',
+        indexes: [{ unique: true, fields: ['id', 'code'] }],
+    },
 )
 
 export default AccessLevel

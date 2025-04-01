@@ -9,7 +9,7 @@ const Role = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false
+            allowNull: false,
         },
         code: {
             type: DataTypes.STRING,
@@ -17,7 +17,7 @@ const Role = sequelize.define(
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         teamId: {
             type: DataTypes.INTEGER,
@@ -25,13 +25,17 @@ const Role = sequelize.define(
             references: {
                 model: Team,
                 key: 'id',
-                deferrable: new Deferrable.INITIALLY_IMMEDIATE
+                deferrable: new Deferrable.INITIALLY_IMMEDIATE,
             }
-        }
+        },
     },
     {
-        tableName: 'roles'
-    }
+        tableName: 'roles',
+        indexes: [
+            { unique: true, fields: ['id', 'code'] },
+            { unique: false, fields: ['teamId'] },
+        ],
+    },
 )
 
 export default Role

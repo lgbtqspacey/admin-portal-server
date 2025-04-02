@@ -4,6 +4,8 @@
     "rootDir": ".",
     "target": "es2019",
     "module": "commonjs",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "typeRoots": [
       "src/@types",
       "./node_modules/@types"

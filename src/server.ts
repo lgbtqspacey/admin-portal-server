@@ -3,7 +3,7 @@ import * as sentry from '@sentry/node'
 import * as dotenv from 'dotenv'
 import express, { Application } from 'express'
 import { MongoClient, ServerApiVersion } from 'mongodb'
-import { Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize-typescript'
 import ErrorHandler from './middleware/ErrorHandler'
 import { routes } from './router/routes'
 import Log from './tools/Log'
@@ -24,14 +24,14 @@ const client = new MongoClient(process.env.DB_URI as string, {
     }
 })
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME ?? '',
-    process.env.DB_USERNAME ?? '',
-    process.env.DB_PASSWORD ?? '',
-    {
-        host: process.env.DB_HOST ?? '',
-        dialect: 'mssql',
-    })
+const sequelize = new Sequelize({
+    database: process.env.DB_NAME ?? '',
+    username: process.env.DB_USERNAME ?? '',
+    password: process.env.DB_PASSWORD ?? '',
+    dialect: 'mssql',
+    host: process.env.DB_HOST ?? '',
+    models: [__dirname + './model']
+})
 
 const start = () => {
     try {

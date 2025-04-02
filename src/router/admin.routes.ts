@@ -11,7 +11,7 @@ const adminRouter = express.Router()
  */
 adminRouter.post(
     '/api/v1/admin/users',
-    Auth.session,
+    // Auth.session,
     ValidateRequest.user,
     AdminController.createUser,
     adminRouter

@@ -1,42 +1,39 @@
-import { DataTypes, Deferrable } from 'sequelize'
-import { sequelize } from '../server'
+import {
+    AutoIncrement,
+    BelongsTo,
+    Column,
+    ForeignKey,
+    Model,
+    NotNull,
+    PrimaryKey,
+    Table,
+    Unique
+} from 'sequelize-typescript'
 import Team from './Team'
 
-const Role = sequelize.define(
-    'Role',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        code: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        teamId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: Team,
-                key: 'id',
-                deferrable: new Deferrable.INITIALLY_IMMEDIATE,
-            }
-        },
-    },
-    {
-        tableName: 'roles',
-        indexes: [
-            { unique: true, fields: ['id', 'code'] },
-            { unique: false, fields: ['teamId'] },
-        ],
-    },
-)
+@Table
+export default class Role extends Model {
+    @PrimaryKey
+    @NotNull
+    @AutoIncrement
+    @Unique
+    @Column
+        id!: number
 
-export default Role
+    @NotNull
+    @Unique
+    @Column
+        code!: string
 
+    @NotNull
+    @Column
+        name!: string
+
+    @NotNull
+    @ForeignKey(() => Team)
+    @Column
+        teamId!: number
+
+    @BelongsTo(() => Team)
+        team!: Team
+}

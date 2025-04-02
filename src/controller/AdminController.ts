@@ -4,16 +4,17 @@ import { httpStatus, reqData } from '../tools/Constants'
 import { InternalServerError, NotFound } from '../tools/Error'
 import { getDataFromPreviousMiddleware } from '../tools/Helpers'
 import Log from '../tools/Log'
+import User from '../model/User'
 
 export default class AdminController {
     public static readonly createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const user = getDataFromPreviousMiddleware(reqData.userCreate, req, next)
 
-            const result = await collections.users.insertOne(user)
+            const result = await new User({...user}).save()
 
             if (result) {
-                res.status(httpStatus.created).send({ id: result.insertedId })
+                res.status(httpStatus.created).send({ id: result })
             } else {
                 next(new InternalServerError())
                 next()

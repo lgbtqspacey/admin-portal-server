@@ -1,31 +1,31 @@
-import { DataTypes } from 'sequelize'
-import { sequelize } from '../server'
+import {
+    AutoIncrement,
+    Column,
+    Model,
+    NotNull,
+    PrimaryKey,
+    Table,
+    Unique
+} from 'sequelize-typescript'
 import { accessLevel } from '../tools/Constants'
 
-const AccessLevel = sequelize.define(
-    'AccessLevel',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        code: {
-            type: DataTypes.ENUM,
-            allowNull: false,
-            values: [...Object.values(accessLevel)],
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        }
-    },
-    {
-        tableName: 'access_levels',
-        indexes: [{ unique: true, fields: ['id', 'code'] }],
-    },
-)
+@Table
+export default class AccessLevel extends Model {
+    @PrimaryKey
+    @NotNull
+    @AutoIncrement
+    @Unique
+    @Column
+        id!: number
 
-export default AccessLevel
+    @NotNull
+    @Unique
+    @Column({
+        values: [...Object.values(accessLevel)]
+    })
+        code!: string
 
+    @NotNull
+    @Column
+        name!: string
+}

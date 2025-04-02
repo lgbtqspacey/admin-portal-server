@@ -1,29 +1,28 @@
-import { DataTypes } from 'sequelize'
-import { sequelize } from '../server'
+import {
+    AutoIncrement,
+    Column,
+    Model,
+    NotNull,
+    PrimaryKey,
+    Table,
+    Unique
+} from 'sequelize-typescript'
 
-const Team = sequelize.define(
-    'Team',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        code: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        tableName: 'teams',
-        indexes: [{ unique: true, fields: ['id', 'code'] }],
-    },
-)
+@Table
+export default class Team extends Model {
+    @PrimaryKey
+    @NotNull
+    @AutoIncrement
+    @Unique
+    @Column
+        id!: number
 
-export default Team
+    @NotNull
+    @Unique
+    @Column
+        code!: string
 
+    @NotNull
+    @Column
+        name!: string
+}

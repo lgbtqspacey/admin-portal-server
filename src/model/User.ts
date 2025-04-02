@@ -79,9 +79,9 @@ export default class User extends Model {
         joinedAt!: string
 
     @AllowNull
-    @Column
     @Default(null)
-        leftAt!: string | null
+    @Column
+        leftAt!: string
 
     @NotNull
     @Column

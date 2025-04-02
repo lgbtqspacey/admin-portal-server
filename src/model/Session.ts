@@ -71,5 +71,5 @@ export default class Session extends Model {
     @AllowNull
     @Default(null)
     @Column
-        confirmedAt!: string | null
+        confirmedAt!: string
 }
